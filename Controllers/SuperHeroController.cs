@@ -23,7 +23,7 @@ namespace SuperHeroAPI.DotNet8.Controllers
         }
         [HttpGet("{id}")]
     
-        public async Task<ActionResult<List<SuperHero>>> GetHero(int id)
+        public async Task<ActionResult<SuperHero>> GetHero(int id)
         {
             var heroe = await _context.SuperHeroes.FindAsync(id);
             if(heroe == null)
