@@ -9,7 +9,7 @@ namespace SuperHeroAPI.DotNet8.Controllers
     [ApiController]
     public class SuperHeroController : ControllerBase
     {
-        private readonly DataContext? _context;
+        private readonly DataContext _context;
         public SuperHeroController(DataContext context)
         {
             _context = context;
@@ -21,27 +21,42 @@ namespace SuperHeroAPI.DotNet8.Controllers
             var heroes = await _context.SuperHeroes.ToListAsync();
             return Ok(heroes);
         }
+
         [HttpGet("{id}")]
-    
         public async Task<ActionResult<SuperHero>> GetHero(int id)
         {
-            var heroe = await _context.SuperHeroes.FindAsync(id);
-            if(heroe == null)
+            var hero = await _context.SuperHeroes.FindAsync(id);
+            if (hero == null)
             {
                 return NotFound("Hero not found!");
             }
-            return Ok(heroe);
+            return Ok(hero);
         }
-        [HttpGet]
 
-        public async Task<ActionResult<List<SuperHero>>> AddHero(SuperHero hero)
+        [HttpPost]
+        public async Task<ActionResult<List<SuperHero>>> AddHero([FromBody] SuperHero hero)
         {
-            var heroe = await _context.SuperHeroes.FindAsync(hero);
-            if (heroe == null)
+            // Remova a definição explícita do valor da coluna de identidade
+            _context.SuperHeroes.Add(new SuperHero
             {
-                return NotFound("Hero not found!");
-            }
-            return Ok(heroe);
+                Name = hero.Name,
+                FirstName = hero.FirstName,
+                LastName = hero.LastName,
+                Place = hero.Place
+            });
+
+            await _context.SaveChangesAsync();
+
+            return Ok(await _context.SuperHeroes.ToListAsync());
+        }
+        [HttpPut]
+        public async Task<ActionResult<List<SuperHero>>>UpdateHero(SuperHero hero)
+
+        {
+            _context.SuperHeroes.Add(hero);
+            await _context.SaveChangesAsync();
+
+            return Ok(await _context.SuperHeroes.ToListAsync());
         }
     }
 }

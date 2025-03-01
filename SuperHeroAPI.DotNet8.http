@@ -12,3 +12,7 @@ GET {{SuperHeroAPI.DotNet8_HostAddress}}/weatherforecast
 GET {{SuperHeroAPI.DotNet8_HostAddress}}/api/superhero
 
 ###
+
+GET {{SuperHeroAPI.DotNet8_HostAddress}}/api/superhero
+
+###
